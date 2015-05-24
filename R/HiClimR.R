@@ -1,4 +1,4 @@
-# $Id: HiClimR.R, v1.2.0 2015/03/27 12:00:00 hsbadr EPS JHU               #
+# $Id: HiClimR.R, v1.2.1 2015/05/24 12:00:00 hsbadr EPS JHU               #
 #-------------------------------------------------------------------------#
 # This is the main function of                                            #
 # HiClimR (Hierarchical Climate Regionalization) R package                #
@@ -17,14 +17,14 @@
 #-------------------------------------------------------------------------#
 #  Clustering Methods:                                                    #
 #                                                                         #
-#  0. REGIONAL linakage or minimum inter-regional correlation.            #
-#  1. WARD's minimum variance or error sum of squares method.             #
-#  2. SINGLE linkage or nearest neighbor method.                          #
-#  3. COMPLETE linkage or diameter.                                       #
-#  4. AVERAGE linkage, group average, or UPGMA method.                    #
-#  5. MCQUITTY's or WPGMA method.                                         #
-#  6. MEDIAN, Gower's or WPGMC method.                                    #
-#  7. CENTROID or UPGMC method.                                           #
+#  0. REGIONAL linakage or minimum inter-regional correlation             #
+#  1. WARD's minimum variance or error sum of squares method              #
+#  2. SINGLE linkage or nearest neighbor method                           #
+#  3. COMPLETE linkage or diameter                                        #
+#  4. AVERAGE linkage, group average, or UPGMA method                     #
+#  5. MCQUITTY's or WPGMA method                                          #
+#  6. MEDIAN, Gower's or WPGMC method                                     #
+#  7. CENTROID or UPGMC method                                            #
 #-------------------------------------------------------------------------#
 # This code is modified by Hamada S. Badr <badr@jhu.edu> from:            #
 # File src/library/stats/R/hclust.R                                       #
@@ -76,6 +76,7 @@
 #   1.1.6   |  03/01/15  |  GitHub    |  Hamada S. Badr  |  badr@jhu.edu  #
 #-------------------------------------------------------------------------#
 #   1.2.0   |  03/27/15  |  MVC       |  Hamada S. Badr  |  badr@jhu.edu  #
+#   1.2.1   |  05/24/15  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
 #-------------------------------------------------------------------------#
 # COPYRIGHT(C) 2013-2015 Earth and Planetary Sciences (EPS), JHU.         #
 #-------------------------------------------------------------------------#
@@ -93,7 +94,8 @@ HiClimR <- function(x = list(),
 	nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, members = NULL, 
 	nSplit = 1, upperTri = TRUE, verbose = TRUE, 
 	validClimR = TRUE, rawStats = TRUE, k = NULL, minSize = 1, alpha = 0.05, 
-    plot = TRUE, dendrogram = TRUE, colPalette = NULL, hang = -1, labels = FALSE) {
+    plot = TRUE, dendrogram = TRUE, colPalette = NULL, hang = -1, labels = FALSE, 
+    pch = 15, cex = 1) {
 
     start.time.proc <- proc.time()
     start.time.sys <- Sys.time()
@@ -174,9 +176,11 @@ HiClimR <- function(x = list(),
     lat <- xc$lat
     x <- xc$x
     rm(xc)
-    
+
+    if (verbose) write("Checking data...", "")
+
     # Check data dimensions
-    if (verbose) write("Checking data dimensions...", "")
+    if (verbose) write("---> Checking dimensions...", "")
     n <- dim(x)[1]
     m <- dim(x)[2]
     if (is.null(n)) 
@@ -189,13 +193,13 @@ HiClimR <- function(x = list(),
         stop("must have n \u2265 2 objects to cluster")
     
     # Check row names (important if detrending is requested)
-    if (verbose) write("Checking row names...", "")
+    if (verbose) write("---> Checking row names...", "")
     if (is.null(rownames(x))) {
         rownames(x) <- seq(1, n)
     }
     
     # Check column names (important if detrending is requested)
-    if (verbose) write("Checking column names...", "")
+    if (verbose) write("---> Checking column names...", "")
     if (is.null(colnames(x))) {
         colnames(x) <- seq(1, m)
     }
@@ -206,7 +210,7 @@ HiClimR <- function(x = list(),
         if (verbose) write("Geographic masking...", "")
         if (is.null(gMask)) {
             gMask <- geogMask(continent = continent, region = region, country = country, 
-                lon = lon, lat = lat, verbose = verbose, plot = FALSE, colPalette = colPalette)
+                lon = lon, lat = lat, verbose = verbose, plot = FALSE)
         }
         
         if (min(gMask) >= 1 && max(gMask) <= n) {
@@ -225,36 +229,36 @@ HiClimR <- function(x = list(),
     	
     	m <- mm[nvar]
     	x <- xx[,(mm0 + 1):(mm0 + m)]
-    	    	
-	    # Remove rows with observations mean bellow meanThresh
-	    if (verbose) write("---> Checking rows with observations mean bellow meanThresh...", "")
+
+        if (verbose) write("---> Computing mean for each row...", "")
 	    # xmean <- rowMeans(x, na.rm=TRUE)
 	    xmean <- rowMeans(x)
+        
+        # Remove rows with observations mean bellow meanThresh
 	    if (!is.null(meanThresh[[nvar]])) {
+            if (verbose) write("---> Checking rows with mean bellow meanThresh...", "")
 	        meanMask <- which(is.na(xmean) | xmean <= meanThresh[[nvar]])
+            if (verbose) write(paste("--->", length(meanMask), "rows found, mean \u2264 ", 
+                meanThresh[[nvar]]), "")
 	        if (length(meanMask) > 0) {
-	            if (verbose) write(paste("--->\t ", length(meanMask), "rows found, mean \u2264 ", 
-	                meanThresh[[nvar]]), "")
-	            
 	            mask <- union(mask, meanMask)
 	        }
 	    }
 	    
 	    # Center data (this has no effect on correlations but speedup compuations)
 	    x <- x - xmean
+        if (verbose) write("---> Computing variance for each row...", "")
 	    v <- rowSums(x^2, na.rm = TRUE)
     
 	    # Remove rows with near-zero-variance observations
-	    if (verbose) write("---> Checking rows with near-zero-variance observations...", "")
 	    if (is.null(varThresh[[nvar]])) {
 	        varThresh[[nvar]] <- 0
 	    }
 	    varMask <- which(is.na(v) | v <= varThresh[[nvar]])
+        if (verbose) write("---> Checking rows with near-zero-variance...", "")
+        if (verbose) write(paste("--->", length(varMask), "rows found, variance \u2264 ", 
+            varThresh[[nvar]]), "")
 	    if (length(varMask) > 0) {
-	        # stop('data cannot include zero-variance rows')
-	        if (verbose) write(paste("--->\t ", length(varMask), "rows found, variance \u2264 ", 
-	            varThresh[[nvar]]), "")
-	        
         	mask <- union(mask, varMask)
     	}
     	
@@ -299,7 +303,7 @@ HiClimR <- function(x = list(),
     
     	# Standardize data if requested
     	if (standardize[[nvar]]) {
-    	    if (verbose) write("---> Standardizing the data...", "")
+    	    if (verbose) write("---> Standardizing data...", "")
         	x <- x/sqrt(v)
         	# Variance of each variable (object/station)
         	v <- rep(1, n)
@@ -308,7 +312,7 @@ HiClimR <- function(x = list(),
         	x <- x * sqrt(m - 1)
     	} else {
         	# Variance of each variable (object/station)
-        	v <- v/(m - 1)
+        	v <- v / (m - 1)
     	}    
     	# Re-adding the mean for nonstandardized data (July 26, 2014)
     	if (!standardize[[nvar]]) {
@@ -323,7 +327,7 @@ HiClimR <- function(x = list(),
     	missVal[[nvar]] <- attr(x, "na.action")
     }
 	x <- xxx
-
+    
     # Free memory
 	rm(xxx, xx, mm0)
 
@@ -339,9 +343,15 @@ HiClimR <- function(x = list(),
     if (n < 2) 
         stop("must have n \u2265 2 objects to cluster")
 
+    # Update variance for multi-variate clustering
+    if (nvars > 1) {
+        if (verbose) write("---> Updating variance for multi-variate clustering...", "")
+        v <- rowSums(x^2, na.rm = TRUE) / (m - 1)
+    }
+
     # Reconstruct data from PCs if requested
     if (!is.null(nPC)) {
-        if (verbose) write("Reconstructing data from PCs...", "")
+        if (verbose) write("---> Reconstructing data from PCs...", "")
         if (nPC >= 1 && nPC <= min(n, m)) {
             xSVD <- La.svd(t(x), nPC, nPC)
             eigVal <- xSVD$d
@@ -358,10 +368,12 @@ HiClimR <- function(x = list(),
         }
     }
 
+	if (verbose) write("Agglomerative Hierarchical Clustering...", "")
+
     # Correlation matrix (fast calculation using BLAS library)
-	if (verbose) write("Computing correlation/dissimilarity matrix...", "")
+	if (verbose) write("---> Computing correlation/dissimilarity matrix...", "")
     if (!is.null(nPC)) {
-        v1 <- rowSums(x1^2)
+        v1 <- rowSums(x1^2, na.rm = TRUE)
         # Correlation matrix (fast calculation using BLAS library)
         #r1 <- tcrossprod(x1/sqrt(v1))
         r1 <- fastCor(t(x1), nSplit = nSplit, upperTri = TRUE, verbose = verbose)
@@ -415,7 +427,7 @@ HiClimR <- function(x = list(),
         members <- rep(1, n) else if (length(members) != n) 
         stop("invalid length of members")
     
-    if (verbose) write("Starting clustering process...", "")
+    if (verbose) write("---> Starting clustering process...", "")
     # Call Fortran subroutine for agglomerative hierarchical clustering
     storage.mode(d) <- "double"
     hcl <- .Fortran("HiClimR", n = n, len = len, method = as.integer(method), 
@@ -427,7 +439,7 @@ HiClimR <- function(x = list(),
     hcass <- .Fortran("hcass2", n = n, ia = hcl$ia, ib = hcl$ib, order = integer(n), 
         iia = integer(n), iib = integer(n), PACKAGE = "HiClimR")
     
-    if (verbose) write("Constructing dendrogram tree...", "")
+    if (verbose) write("---> Constructing dendrogram tree...", "")
     # Construct 'hclust'/'HiClimR' dendogram tree
     tree <- list(merge = cbind(hcass$iia[1L:(n - 1)], hcass$iib[1L:(n - 
         1)]), height = hcl$crit[1L:(n - 1)], order = hcass$order, labels = rownames(x), 
@@ -469,7 +481,8 @@ HiClimR <- function(x = list(),
     #}
     
     if (hybrid) {
-        if (verbose) write("Reonstructing the upper part of the tree...", "")
+        if (verbose) write("Hybrid Hierarchical Clustering...", "")
+
         if (verbose && tree$method == "regional") {
             write("---> WARNING: hybrid option is redundant when using regional linkage method!", 
                 "")
@@ -487,7 +500,7 @@ HiClimR <- function(x = list(),
             methodH <- pmatch("regional", METHODS) - 1
             
             # Update variances dissimilarities of the upper part of the tree
-		    if (verbose) write("Updating correlation/dissimilarity matrix for hybrid clustering...", "")
+		    if (verbose) write("---> Updating correlation/dissimilarity matrix...", "")
             cutTreeH <- cutree(tree, k = kH)
             RMH <- t(apply(tree$data, 2, function(r) tapply(r, cutTreeH, 
                 mean)))
@@ -497,6 +510,7 @@ HiClimR <- function(x = list(),
             dH <- 1 - rH
             
             # Call Fortran subroutine for agglomerative hierarchical clustering
+            if (verbose) write("---> Reonstructing the upper part of the tree...", "")
             storage.mode(d) <- "double"
             hclH <- .Fortran("HiClimR", n = kH, len = lenH, method = as.integer(methodH), 
                 ia = integer(kH), ib = integer(kH), crit = double(kH), 
@@ -517,6 +531,7 @@ HiClimR <- function(x = list(),
             class(treeH) <- "hclust"
             
             # Add the new upper part of the tree to the original tree
+            if (verbose) write("---> Merging upper and lower parts of the tree...", "")
             tree$treeH <- treeH
         }
     }
@@ -547,12 +562,12 @@ HiClimR <- function(x = list(),
     # Cluster validation
     if (validClimR) {
         if (verbose) write("Calling cluster validation...", "")
-        z <- validClimR(y = tree, k = k, minSize = minSize, alpha = alpha, 
-        	verbose = verbose, plot = plot, colPalette = colPalette)
+        z <- validClimR(y = tree, k = k, minSize = minSize, alpha = alpha, verbose = verbose, 
+            plot = plot, colPalette = colPalette, pch = pch, cex = cex)
         
         tree <- c(tree, z)
     }
-    
+
     class(tree) <- c("hclust", "HiClimR")
     if (verbose) write("\nPROCESSING COMPLETED", "")
     

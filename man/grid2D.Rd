@@ -16,13 +16,12 @@
 grid2D(lon=lon, lat=lat)
 }
 \arguments{
-  \item{lon}{a vector of unique longitudes with length \code{n}.
-  For gridded data, \code{n * m = N} where m is the length of
-  unique latitudes and N is the total number of spatial elements.}
+  \item{lon}{a vector of longitudes with length \code{N}. Longitudes takes 
+  values from \code{-180} to \code{180} (not \code{0} to \code{360}).
+  For gridded data, the length may have the value (\code{n}) provided that 
+  \code{n * m = N} where \code{n = length(unique(lon))} and \code{m = length(unique(lat))}.}
 
-  \item{lat}{a vector of unique latitudes with length \code{m}.
-  For gridded data, \code{n * m = N} where n is the length of
-  unique longitudes and N is the total number of spatial elements.}
+  \item{lat}{a vector of latitudes with length \code{N} or \code{m}. See \code{lon}.}
 }
 \value{
   A list with the following components:
@@ -41,7 +40,7 @@ grid2D(lon=lon, lat=lat)
 \references{
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2015):
   A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics}, 
-  In Review.
+  1-10, \url{http://dx.doi.org/10.1007/s12145-015-0221-7}.
 
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2014):
   Hierarchical Climate Regionalization, \emph{CRAN},

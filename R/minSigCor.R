@@ -1,4 +1,4 @@
-# $Id: minSigCor.R, v1.2.3 2015/08/05 12:00:00 hsbadr EPS JHU             #
+# $Id: minSigCor.R, v2.1.1 2019/01/02 12:00:00 hsbadr EPS JHU             #
 #-------------------------------------------------------------------------#
 # This function is a part of HiClimR R package.                           #
 #-------------------------------------------------------------------------#
@@ -37,15 +37,21 @@
 #   1.2.2   |  07/21/15  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
 #   1.2.3   |  08/05/15  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
 #-------------------------------------------------------------------------#
-# COPYRIGHT(C) 2013-2015 Earth and Planetary Sciences (EPS), JHU.         #
+#   2.0.0   |  12/22/18  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
+#   2.1.0   |  01/01/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
+#   2.1.1   |  01/02/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
+#-------------------------------------------------------------------------#
+# COPYRIGHT(C) 2013-2019 Earth and Planetary Sciences (EPS), JHU.         #
 #-------------------------------------------------------------------------#
 # Function: Minimum significant correlation for a sample size             #
 #-------------------------------------------------------------------------#
 
-minSigCor <- function(n = 41, alpha = 0.05, r = seq(0, 1, by = 1e-06)) {
-
+minSigCor <-
+  function(n = 41,
+           alpha = 0.05,
+           r = seq(0, 1, by = 1e-06)) {
     dof <- n - 2
-    Fstat <- r^2 * dof/(1 - r^2)
+    Fstat <- r ^ 2 * dof / (1 - r ^ 2)
     p.value <- 1 - pf(Fstat, 1, dof)
     p.value[p.value > alpha] <- NA
     i <- which(p.value == max(p.value, na.rm = TRUE))
@@ -54,4 +60,4 @@ minSigCor <- function(n = 41, alpha = 0.05, r = seq(0, 1, by = 1e-06)) {
     
     #gc()
     return(RsMin)
-}
+  }

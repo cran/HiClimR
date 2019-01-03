@@ -1,9 +1,9 @@
 % File man/geogMask.Rd
 % Part of the HiClimR R package
-% Copyright(C) 2013-2015 Department of Earth and Planetary Sciences, JHU.
+% Copyright(C) 2013-2019 Department of Earth and Planetary Sciences, JHU.
 % Distributed under GPL 2 or later
 
-\newcommand{\CRANpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
+\newcommand{\CRANpkg}{\href{https://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
 \name{geogMask}
 \title{Geographic mask from longitude and latitute}
@@ -76,25 +76,26 @@ geogMask(continent=NULL, region=NULL, country=NULL, lon=NULL, lat=NULL,
   either \code{continent}, \code{region}, or \code{country} parameters. Valid 
   values for them can be obtained by running \code{geogMask()}. World mask data
   is based on the HIU Large Scale International Boundaries (LSIB) data
-  (http://hiu.state.gov/data/data.aspx).
+  (https://hiu.state.gov/data/data.aspx).
 }
 \references{
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2015):
-  A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics}, 
-  1-10, \url{http://dx.doi.org/10.1007/s12145-015-0221-7}.
+  A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics},
+  \bold{8}(4), 949-958, \url{https://doi.org/10.1007/s12145-015-0221-7}.
 
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2014):
-  Hierarchical Climate Regionalization, \emph{CRAN},
-  \url{http://cran.r-project.org/package=HiClimR}.
+  Hierarchical Climate Regionalization,
+  \emph{Comprehensive R Archive Network (CRAN},
+  \url{https://cran.r-project.org/package=HiClimR}.
 }
 \author{
   Hamada Badr <badr@jhu.edu>, Ben Zaitchik <zaitchik@jhu.edu>, and 
   Amin Dezfuli <dez@jhu.edu>.
 }
 \seealso{
-  \code{\link{HiClimR}}, \code{\link{validClimR}}, \code{\link{geogMask}}, 
-  \code{\link{coarseR}}, \code{\link{fastCor}}, \code{\link{grid2D}}, and 
-  \code{\link{minSigCor}}.
+  \code{\link{HiClimR}}, \code{\link{HiClimR2nc}}, \code{\link{validClimR}},
+  \code{\link{geogMask}}, \code{\link{coarseR}}, \code{\link{fastCor}},
+  \code{\link{grid2D}} and \code{\link{minSigCor}}.
 }
 \examples{
 require(HiClimR)

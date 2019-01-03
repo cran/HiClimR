@@ -6,13 +6,15 @@
 !                                                                         !
 !  References:                                                            !
 !                                                                         !
-!  Badr, H. S., Zaitchik, B. F. and Dezfuli, A. K. (2015).                !
-!  A Tool for Hierarchical Climate Regionalization.                       !
-!  Earth Science Informatics, In Review.                                  !
+!  Badr, H. S., Zaitchik, B. F. and Dezfuli, A. K. (2015):                !
+!  A Tool for Hierarchical Climate Regionalization,                       !
+!  Earth Science Informatics, 8(4), 949-958,                              !
+!  https://doi.org/10.1007/s12145-015-0221-7.                             !
 !                                                                         !
-!  Badr, H. S., Zaitchik, B. F. and Dezfuli, A. K. (2015).                !
-!  Hierarchical Climate Regionalization. CRAN,                            !
-!  http://cran.r-project.org/package=HiClimR.                             !
+!  Badr, H. S., Zaitchik, B. F. and Dezfuli, A. K. (2014):                !
+!  HiClimR: Hierarchical Climate Regionalization,                         !
+!  Comprehensive R Archive Network (CRAN),                                !
+!  https://cran.r-project.org/package=HiClimR.                            !
 !                                                                         !
 !  Source Code: https://github.com/hsbadr/HiClimR                         !
 !                                                                         !
@@ -56,9 +58,9 @@
 !                                                                         !
 !  This code is modified by Hamada S. Badr <badr@jhu.edu> from:           !
 !               File src/library/stats/src/hclust.f                       !
-!  Part of the R package, http://www.R-project.org                        !
+!  Part of the R package, https://www.R-project.org                        !
 !                                                                         !
-!  Copyright(C)  1995-2015  The R Core Team                               !
+!  Copyright(C)  1995-2019  The R Core Team                               !
 !                                                                         !
 !  This program is free software; you can redistribute it and/or          !
 !  modify it under the terms of the GNU General Public License as         !
@@ -71,7 +73,7 @@
 !  GNU General Public License for more details.	                          !
 !                                                                         !
 !  A copy of the GNU General Public License is available at               !
-!  http://www.r-project.org/Licenses                                      !
+!  https://www.r-project.org/Licenses                                      !
 !                                                                         !
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 !                                                                         !
@@ -109,10 +111,14 @@
 !   1.2.1   |  05/24/15  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
 !   1.2.2   |  07/21/15  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
 !   1.2.3   |  08/05/15  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
+!-------------------------------------------------------------------------!
+!   2.0.0   |  12/22/18  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
+!   2.1.0   |  01/01/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
+!   2.1.1   |  01/02/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
 !                                                                         !
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 !                                                                         !
-! COPYRIGHT(C) 2013-2015 Earth and Planetary Sciences (EPS), JHU.         !
+! COPYRIGHT(C) 2013-2019 Earth and Planetary Sciences (EPS), JHU.         !
 !                                                                         !
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 !                                                                         !

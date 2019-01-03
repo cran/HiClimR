@@ -1,6 +1,6 @@
 % File man/TestCase.Rd
 % Part of the HiClimR R package
-% Copyright(C) 2013-2015 Department of Earth and Planetary Sciences, JHU.
+% Copyright(C) 2013-2019 Department of Earth and Planetary Sciences, JHU.
 % Distributed under GPL 2 or later
 
 \name{TestCase}
@@ -36,17 +36,18 @@ data(TestCase)
 }
 \references{
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2015):
-  A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics}, 
-  1-10, \url{http://dx.doi.org/10.1007/s12145-015-0221-7}.
+  A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics},
+  \bold{8}(4), 949-958, \url{https://doi.org/10.1007/s12145-015-0221-7}.
 
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2014):
-  Hierarchical Climate Regionalization, \emph{CRAN},
-  \url{http://cran.r-project.org/package=HiClimR}.
+  Hierarchical Climate Regionalization,
+  \emph{Comprehensive R Archive Network (CRAN},
+  \url{https://cran.r-project.org/package=HiClimR}.
 
-  Harris, I., Jones, P., Osborn, T., and Lister, D. (2013):
-  Updated high-resolution grids of monthly climatic observations-the CRU TS3.10 Dataset, 
-  \emph{International journal of climatology}, Available from: 
-  \url{http://badc.nerc.ac.uk/view/badc.nerc.ac.uk__ATOM__dataent_1256223773328276}
+  Harris, I., Jones, P. D., Osborn, T. J., and Lister, D. H. (2014):
+  Updated high-resolution grids of monthly climatic observations - the CRU TS3.10 Dataset,
+  \emph{International journal of climatology}, \bold{34}, 623-642,
+  \url{https://doi.org/10.1002/joc.3711}.
 }
 \examples{
 require(HiClimR)

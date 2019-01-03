@@ -1,23 +1,25 @@
 HiClimR
 =======
 
-``HiClimR`` — **Hi**erarchical **Clim**ate **R**egionalization
+**``HiClimR``** — **Hi**erarchical **Clim**ate **R**egionalization
 
-Table of Contents
-=================
+## Table of Contents
 
   * [HiClimR](#hiclimr)
     * [Introduction](#introduction)
     * [Features](#features)
     * [Implementation](#implementation)
-    * [Documentation](#documentation)
     * [Installation](#installation)
         * [From CRAN](#from-cran)
         * [From GitHub](#from-github)
     * [Source](#source)
     * [License](#license)
+    * [Citation](#citation)
     * [History](#history)
     * [Changes](#changes)
+        * [2019-01-02: version 2.1.1](#2019-01-02-version-211)
+        * [2019-01-01: version 2.1.0](#2019-01-01-version-210)
+        * [2018-12-22: version 2.0.0](#2018-12-22-version-200)
         * [2015-08-05: version 1.2.3](#2015-08-05-version-123)
         * [2015-07-21: version 1.2.2](#2015-07-21-version-122)
         * [2015-05-24: version 1.2.1](#2015-05-24-version-121)
@@ -41,18 +43,18 @@ Table of Contents
         * [2014-03-07: version 1.0.0](#2014-03-07-version-100)
     * [Examples](#examples)
         * [Single-Variate Clustering](#single-variate-clustering)
-        * [Multi-Variate Clustering](#multi-variate-clustering)
+        * [Multivariate Clustering](#multivariate-clustering)
         * [Miscellaneous Examples](#miscellaneous-examples)
 
 ## Introduction
 
-[**`HiClimR`**](http://cran.r-project.org/package=HiClimR) is a tool for **Hi**erarchical **Clim**ate **R**egionalization applicable to any correlation-based clustering. Climate regionalization is the process of dividing an area into smaller regions that are homogeneous with respect to a specified climatic metric. Several features are added to facilitate the applications of climate regionalization (or spatiotemporal analysis in general) and to implement a cluster validation function with an objective tree cutting to find an optimal number of clusters for a user-specified confidence level. These include options for preprocessing and postprocessing as well as efficient code execution for large datasets and options for splitting big data and computing only the upper-triangular half of the correlation/dissimilarity matrix to overcome memory limitations. Hybrid hierarchical clustering reconstructs the upper part of the tree above a cut to get the best of the available methods. Multi-variate clustering (MVC) provides options for filtering all variables before preprocessing, detrending and standardization of each variable, and applying weights for the preprocessed variables.
+[**`HiClimR`**](https://cran.r-project.org/package=HiClimR) is a tool for **Hi**erarchical **Clim**ate **R**egionalization applicable to any correlation-based clustering. Climate regionalization is the process of dividing an area into smaller regions that are homogeneous with respect to a specified climatic metric. Several features are added to facilitate the applications of climate regionalization (or spatiotemporal analysis in general) and to implement a cluster validation function with an objective tree cutting to find an optimal number of clusters for a user-specified confidence level. These include options for preprocessing and postprocessing as well as efficient code execution for large datasets and options for splitting big data and computing only the upper-triangular half of the correlation/dissimilarity matrix to overcome memory limitations. Hybrid hierarchical clustering reconstructs the upper part of the tree above a cut to get the best of the available methods. Multivariate clustering (MVC) provides options for filtering all variables before preprocessing, detrending and standardization of each variable, and applying weights for the preprocessed variables.
 
 [⇪](#hiclimr)
 
 ## Features
 
-[**`HiClimR`**](http://cran.r-project.org/package=HiClimR) adds several features and a new clustering method (called, `regional` linkage) to hierarchical clustering in [**R**](http://www.r-project.org) (`hclust` function in `stats` library) including:
+[**`HiClimR`**](https://cran.r-project.org/package=HiClimR) adds several features and a new clustering method (called, `regional` linkage) to hierarchical clustering in [**R**](https://www.r-project.org) (`hclust` function in `stats` library) including:
 
 * data regridding
 * coarsening spatial resolution
@@ -60,6 +62,7 @@ Table of Contents
    * by continents
    * by regions
    * by countries
+* contiguity-constrained clustering
 * data filtering by thresholds
    * mean threshold
    * variance threshold
@@ -87,14 +90,15 @@ Table of Contents
    * the upper part of the tree is reconstructed above a cut
    * the lower part of the tree uses user-selected method
    * the upper part of the tree uses `regional` linkage method
-* multi-variate clustering (MVC)
+* multivariate clustering (MVC)
    * filtering all variables before preprocessing
    * detrending and standardization of each variable
    * applying weight for the preprocessed variables
 * cluster validation
    * summary statistics based on raw data or the data reconstructed by PCA
    * objective tree cut using minimum significant correlation between region means
-* visualization of region maps
+* visualization of regionaliztion results
+* exporting region map and mean timeseries into NetCDF-4
 
 The `regional` linkage method is explained in the context of a spatio-temporal problem, in which `N` spatial elements (e.g., weather stations) are divided into `k` regions, given that each element has a time series of length `M`. It is based on inter-regional correlation distance between the temporal means of different regions (or elements at the first merging step). It modifies the update formulae of `average` linkage method by incorporating the standard deviation of the merged region timeseries, which is a function of the correlation between the individual regions, and their standard deviations before merging. It is equal to the average of their standard deviations if and only if the correlation between the two merged regions is `100%`. In this special case, the `regional` linkage method is reduced to the classic `average` linkage clustering method.
 
@@ -102,40 +106,35 @@ The `regional` linkage method is explained in the context of a spatio-temporal p
 
 ## Implementation
 
-[Badr et. al (2015)](http://dx.doi.org/10.1007/s12145-015-0221-7) describes the regionalization algorithms, features, and data processing tools included in the package and presents a demonstration application in which the package is used to regionalize Africa on the basis of interannual precipitation variability. The figure below shows a detailed flowchart for the package. `Cyan` blocks represent helper functions, `green` is input data or parameters, `yellow` indicates agglomeration Fortran code, and `purple` shows graphics options. For multi-variate clustering (MVC), the input data is a list of matrices (one matrix for each variable with the same number of rows to be clustered; the number of columns may vary per variable). The blue dashed boxes involve a loop for all variables to apply mean and/or variance thresholds, detrending, and/or standardization per variable before weighing the preprocessed variables and binding them by columns in one matrix for clustering. `x` is the input `N x M` data matrix, `xc` is the coarsened `N0 x M` data matrix where `N0 ≤ N` (`N0 = N` only if `lonStep = 1` and `latStep = 1`), `xm` is the masked and filtered `N1 x M1` data matrix where `N1 ≤ N0` (`N1 = N0` only if the number of masked stations/points is zero) and `M1 ≤ M` (`M1 = M` only if no columns are removed due to missing values), and `x1` is the reconstructed `N1` x `M1` data matrix if PCA is performed.
+[Badr et. al (2015)](https://doi.org/10.1007/s12145-015-0221-7) describes the regionalization algorithms, features, and data processing tools included in the package and presents a demonstration application in which the package is used to regionalize Africa on the basis of interannual precipitation variability. The figure below shows a detailed flowchart for the package. `Cyan` blocks represent helper functions, `green` is input data or parameters, `yellow` indicates agglomeration Fortran code, and `purple` shows graphics options. For multivariate clustering (MVC), the input data is a list of matrices (one matrix for each variable with the same number of rows to be clustered; the number of columns may vary per variable). The blue dashed boxes involve a loop for all variables to apply mean and/or variance thresholds, detrending, and/or standardization per variable before weighing the preprocessed variables and binding them by columns in one matrix for clustering. `x` is the input `N x M` data matrix, `xc` is the coarsened `N0 x M` data matrix where `N0 ≤ N` (`N0 = N` only if `lonStep = 1` and `latStep = 1`), `xm` is the masked and filtered `N1 x M1` data matrix where `N1 ≤ N0` (`N1 = N0` only if the number of masked stations/points is zero) and `M1 ≤ M` (`M1 = M` only if no columns are removed due to missing values), and `x1` is the reconstructed `N1` x `M1` data matrix if PCA is performed.
 
-![HiClimR Flowchart](http://blaustein.eps.jhu.edu/~hbadr1/images/HiClimR_flowchart.png)
-*[`HiClimR`](http://cran.r-project.org/package=HiClimR) is applicable to any correlation-based clustering.*
+<img src="https://github.com/hsbadr/HiClimR/raw/master/HiClimR.png" title="HiClimR Flowchart" alt="HiClimR Flowchart" style="display: block; margin: auto;" />
 
-[⇪](#hiclimr)
-
-## Documentation
-
-For information on how to use [**`HiClimR`**](http://cran.r-project.org/package=HiClimR), check out the most updated [user manual](http://blaustein.eps.jhu.edu/~hbadr1/files/HiClimR-manual.pdf) and [examples](#examples) bellow.
+*[`HiClimR`](https://cran.r-project.org/package=HiClimR) is applicable to any correlation-based clustering.*
 
 [⇪](#hiclimr)
 
 ## Installation
 
-There are many ways to install an R package from precombiled binareies or source code. For more details, you may search for how to install an R package, but here are the most convenient ways to install [**`HiClimR`**](http://cran.r-project.org/package=HiClimR): 
+There are many ways to install an R package from precombiled binareies or source code. For more details, you may search for how to install an R package, but here are the most convenient ways to install [**`HiClimR`**](https://cran.r-project.org/package=HiClimR): 
 
 #### From CRAN
 
-This is the easiest way to install an R package on **Windows**, **Mac**, or **Linux**. You just fire up an [**R**](http://www.r-project.org) shell and type:
+This is the easiest way to install an R package on **Windows**, **Mac**, or **Linux**. You just fire up an [**R**](https://www.r-project.org) shell and type:
 
 ```R
         install.packages("HiClimR")
 ```
 
-In theory the package should just install, however, you may be asked to select your local mirror (i.e. which server should you use to download the package). If you are using **R-GUI** or **R-Studio**, you can find a menu for package installation where you can just search for [**`HiClimR`**](http://cran.r-project.org/package=HiClimR) and install it.
+In theory the package should just install, however, you may be asked to select your local mirror (i.e. which server should you use to download the package). If you are using **R-GUI** or **R-Studio**, you can find a menu for package installation where you can just search for [**`HiClimR`**](https://cran.r-project.org/package=HiClimR) and install it.
 
 [⇪](#hiclimr)
 
 #### From GitHub
 
-This is intended for developers and requires a development environment (compilers, libraries, ... etc) to install the latest development release of [**`HiClimR`**](http://cran.r-project.org/package=HiClimR). On **Linux** and **Mac**, you can download the source code and use `R CMD INSTALL` to install it. In a convenient way, you may use [`devtools`](https://github.com/hadley/devtools) as follows:
+This is intended for developers and requires a development environment (compilers, libraries, ... etc) to install the latest development release of [**`HiClimR`**](https://cran.r-project.org/package=HiClimR). On **Linux** and **Mac**, you can download the source code and use `R CMD INSTALL` to install it. In a convenient way, you may use [`devtools`](https://github.com/hadley/devtools) as follows:
 
-* Install the release version of `devtools` from [**CRAN**](http://cran.r-project.org):
+* Install the release version of `devtools` from [**CRAN**](https://cran.r-project.org):
 
 ```R
         install.packages("devtools")
@@ -143,15 +142,14 @@ This is intended for developers and requires a development environment (compiler
 
 * Make sure you have a working development environment:
 
-    * **Windows**: Install [Rtools](http://cran.r-project.org/bin/windows/Rtools/).
+    * **Windows**: Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/).
     * **Mac**: Install Xcode from the Mac App Store.
     * **Linux**: Install a compiler and various development libraries (details vary across different flavors of **Linux**).
 
-* Install [**`HiClimR`**](http://cran.r-project.org/package=HiClimR) from [GitHub source](https://github.com/hsbadr/HiClimR):
+* Install [**`HiClimR`**](https://cran.r-project.org/package=HiClimR) from [GitHub source](https://github.com/hsbadr/HiClimR):
 
 ```R
-        library(devtools)
-        install_github("hsbadr/HiClimR")
+        devtools::install_github("hsbadr/HiClimR")
 ```
 
 [⇪](#hiclimr)
@@ -164,15 +162,32 @@ The source code repository can be found on GitHub at [https://github.com/hsbadr/
 
 ## License
 
-[**`HiClimR`**](http://cran.r-project.org/package=HiClimR) is licensed under `GPL-2 | GPL-3`. The code is modified by [Hamada S. Badr](http://blaustein.eps.jhu.edu/~hbadr1) from `src/library/stats/R/hclust.R` part of [**R** package](http://www.R-project.org) Copyright © 1995-2015 The [**R**](http://www.r-project.org) Core Team.
+[**`HiClimR`**](https://cran.r-project.org/package=HiClimR) is licensed under `GPL-2 | GPL-3`. The code is modified by [Hamada S. Badr](http://pages.jh.edu/~hbadr1) from `src/library/stats/R/hclust.R` part of [**R** package](https://www.R-project.org) Copyright © 1995-2019 The [**R**](https://www.r-project.org) Core Team.
 
 * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
 * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-A copy of the GNU General Public License is available at http://www.r-project.org/Licenses.
+A copy of the GNU General Public License is available at https://www.r-project.org/Licenses.
 
-Copyright © 2013-2015 Earth and Planetary Sciences (EPS), Johns Hopkins University (JHU).
+Copyright © 2013-2019 Earth and Planetary Sciences (EPS), Johns Hopkins University (JHU).
+
+[⇪](#hiclimr)
+
+## Citation
+
+To cite HiClimR in publications, please use:
+
+```R
+        citation("HiClimR")
+```
+Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2015):
+A Tool for Hierarchical Climate Regionalization, _Earth Science Informatics_,
+**8**(4), 949-958, https://doi.org/10.1007/s12145-015-0221-7.
+
+Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2014):
+HiClimR: Hierarchical Climate Regionalization, _Comprehensive R Archive Network (CRAN)_,
+https://cran.r-project.org/package=HiClimR.
 
 [⇪](#hiclimr)
 
@@ -205,10 +220,40 @@ Copyright © 2013-2015 Earth and Planetary Sciences (EPS), Johns Hopkins Univers
 |   **1.2.1**   |   05/24/15   |  Updated      |  Hamada S. Badr  |  badr@jhu.edu  |
 |   **1.2.2**   |   07/21/15   |  Updated      |  Hamada S. Badr  |  badr@jhu.edu  |
 |   **1.2.3**   |   08/05/15   |  Updated      |  Hamada S. Badr  |  badr@jhu.edu  |
+|   **2.0.0**   |   12/22/18   |  **Updated**  |  Hamada S. Badr  |  badr@jhu.edu  |
+|   **2.1.0**   |   01/01/19   |  **Updated**  |  Hamada S. Badr  |  badr@jhu.edu  |
+|   **2.1.1**   |   01/01/19   |  **Updated**  |  Hamada S. Badr  |  badr@jhu.edu  |
 
 [⇪](#hiclimr)
 
 ## Changes
+
+#### 2019-01-02: version 2.1.1
+
+* `fastCor`: Fixed row/col names of the correlation matrix
+* `fastCor`: Cleaned up zero-variance data check
+* Examples: Minor comment update
+
+#### 2019-01-01: version 2.1.0
+
+* Added contiguity constraint based on geographic distance
+* Exporting region map and mean timeseries into NetCDF-4 file
+* Replaced `multi-variate` with `multivariate`
+* Renamed `weightedVar` to `weightMVC`
+* Updated citation information
+* Updated and cleaned up package DESCRIPTION
+* Updated and cleaned up README
+
+#### 2018-12-22: version 2.0.0
+
+* Fixed NOTE: Registering native routines
+* `fastCor`: Removed zero-variance data
+* `fastCor`: Introduced `optBLAS`
+* `fastCor`: Code cleanup
+* Reformatted R source code
+* Updated and fixed the examples
+* Updated CRU TS dataset citation
+* Updated `README` and all URLs
 
 #### 2015-08-05: version 1.2.3
 
@@ -233,7 +278,7 @@ Copyright © 2013-2015 Earth and Planetary Sciences (EPS), Johns Hopkins Univers
 
 #### 2015-05-24: version 1.2.1
 
-* Updating variance for multi-variate clustering
+* Updating variance for multivariate clustering
 * More plotting options (`pch` and `cex`)
 * `geogMask` supports ungridded data
 * Updated user manual with the following notes:
@@ -250,7 +295,7 @@ Copyright © 2013-2015 Earth and Planetary Sciences (EPS), Johns Hopkins Univers
 
 #### 2015-03-27: version 1.2.0
 
-* Multi-variate clustering (MVC)
+* Multivariate clustering (MVC)
    * the input matrix `x` can now be a list of matrices (one matrix for each variable)
      * `length(x) = nvars` where `nvars` is the number of variables
      * number of rows `N` = number of objects (e.g., stations) to be clustered
@@ -262,12 +307,12 @@ Copyright © 2013-2015 Earth and Planetary Sciences (EPS), Johns Hopkins Univers
         * `length(varThresh) = length(x) = nvars`
         * `length(detrend) = length(x) = nvars`
         * `length(standardize) = length(x) = nvars`
-        * `length(weightedVar) = length(x) = nvars`
+        * `length(weightMVC) = length(x) = nvars`
      * filtering with `meanThresh` and `varThresh` thresholds
      * detrending with `detrend` option, if requested
      * standardization with `standardize` option, if requested
         * strongly recommended since variables may have different magnitudes  
-     * weighting by the new `weightedVar` option (default is `1`)
+     * weighting by the new `weightMVC` option (default is `1`)
      * combining variables by column (for each object: spatial points or stations)
      * applying PCA (if requested) and computing the correlation/dissimilarity matrix
 * Preliminary big data support
@@ -291,7 +336,7 @@ Copyright © 2013-2015 Earth and Planetary Sciences (EPS), Johns Hopkins Univers
 * Setting minimum `k = 2`, for objective tree cutting
    * this addresses an issue caused by undefined `k = NULL` in `validClimR` function
    * when all inter-cluster correlations are significant at the user-specified significance level
-* Code reformatting using [`formatR`](http://cran.r-project.org/package=formatR)
+* Code reformatting using [`formatR`](https://cran.r-project.org/package=formatR)
 * Package description and URLs have been revised
 * Source code is now maintained on GitHub by authors
 
@@ -457,7 +502,7 @@ Copyright © 2013-2015 Earth and Planetary Sciences (EPS), Johns Hopkins Univers
 #### Single-Variate Clustering
 
 ```R
-require(HiClimR)
+library(HiClimR)
 
 #----------------------------------------------------------------------------------#
 # Typical use of HiClimR for single-variate clustering:                            #
@@ -476,9 +521,9 @@ lat <- c(xGrid$lat)
 ## Single-Variate Hierarchical Climate Regionalization
 y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = FALSE,
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE,
-    standardize = TRUE, nPC = NULL, method = "regional", hybrid = FALSE, kH = NULL, 
+    standardize = TRUE, nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, 
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE, 
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01, 
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01, 
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
 #----------------------------------------------------------------------------------#
@@ -490,7 +535,7 @@ y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = FALSE
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE,
     standardize = TRUE, nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL,
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01,
+    validClimR = TRUE, k = 5, minSize = 1, alpha = 0.01,
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
 ## Use data splitting for big data
@@ -498,7 +543,7 @@ y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = FALSE
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE,
     standardize = TRUE, nPC = NULL, method = "ward", hybrid = TRUE, kH = NULL,
     members = NULL, nSplit = 10, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01,
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01,
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
 ## Use hybrid Ward-Regional method
@@ -506,19 +551,19 @@ y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = FALSE
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE,
     standardize = TRUE, nPC = NULL, method = "ward", hybrid = TRUE, kH = NULL,
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01,
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01,
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 ## Check senitivity to kH for the hybrid method above
 ```
 [⇪](#hiclimr)
 
-#### Multi-Variate Clustering
+#### Multivariate Clustering
 
 ```R
 require(HiClimR)
 
 #----------------------------------------------------------------------------------#
-# Typical use of HiClimR for multi-variate clustering:                             #
+# Typical use of HiClimR for multivariate clustering:                              #
 #----------------------------------------------------------------------------------#
  
 ## Load the test data included/loaded in the package (1 degree resolution)
@@ -535,21 +580,21 @@ lat <- TestCase$lat
 y <- HiClimR(x=list(x1, x1), lon = lon, lat = lat, lonStep = 1, latStep = 1, 
     geogMask = FALSE, continent = "Africa", meanThresh = list(10, 10), 
     varThresh = list(0, 0), detrend = list(TRUE, TRUE), standardize = list(TRUE, TRUE), 
-    nPC = NULL, method = "regional", hybrid = FALSE, kH = NULL, 
+    nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, 
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01, 
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01, 
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
 ## Generate a random matrix with the same number of rows
 x2 <- matrix(rnorm(nrow(x1) * 100, mean=0, sd=1), nrow(x1), 100)
 
-## Multi-Variate Hierarchical Climate Regionalization
+## Multivariate Hierarchical Climate Regionalization
 y <- HiClimR(x=list(x1, x2), lon = lon, lat = lat, lonStep = 1, latStep = 1, 
     geogMask = FALSE, continent = "Africa", meanThresh = list(10, NULL), 
     varThresh = list(0, 0), detrend = list(TRUE, FALSE), standardize = list(TRUE, TRUE), 
-    weightedVar = list(1, 1), nPC = NULL, method = "regional", hybrid = FALSE, kH = NULL, 
+    weightMVC = list(1, 1), nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, 
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01, 
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01, 
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 ## You can apply all clustering methods and options
 ```
@@ -595,27 +640,36 @@ gMask <- geogMask(continent = "Africa", lon = lon, lat = lat, plot = TRUE,
 ## Hierarchical Climate Regionalization Without geographic masking
 y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = FALSE, 
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE, 
-    standardize = TRUE, nPC = NULL, method = "regional", hybrid = FALSE, kH = NULL, 
+    standardize = TRUE, nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, 
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01, 
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01, 
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
-## With geographic masking (specify the mask produced bove to save time)
+## With geographic masking (you may specify the mask produced above to save time)
 y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = TRUE, 
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE, 
-    standardize = TRUE, nPC = NULL, method = "regional", hybrid = FALSE, kH = NULL, 
+    standardize = TRUE, nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, 
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01, 
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01, 
+    plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
+
+## With geographic masking and contiguity constraint
+## Change contigConst as appropriate
+y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = TRUE,
+    continent = "Africa", contigConst = 1, meanThresh = 10, varThresh = 0, detrend = TRUE,
+    standardize = TRUE, nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL,
+    members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01,
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
 ## Find minimum significant correlation at 95% confidence level
 rMin <- minSigCor(n = nrow(x), alpha = 0.05, r = seq(0, 1, by = 1e-06))
 
 ## Validtion of Hierarchical Climate Regionalization
-z <- validClimR(y, k = NULL, minSize = 1, alpha = 0.01, plot = TRUE, colPalette = NULL)
+z <- validClimR(y, k = 12, minSize = 1, alpha = 0.01, plot = TRUE, colPalette = NULL)
 
 ## Apply minimum cluster size (minSize = 25)
-z <- validClimR(y, k = NULL, minSize = 25, alpha = 0.01, plot = TRUE, colPalette = NULL)
+z <- validClimR(y, k = 12, minSize = 25, alpha = 0.01, plot = TRUE, colPalette = NULL)
 
 ## The optimal number of clusters, including small clusters
 k <- length(z$clustFlag)
@@ -637,8 +691,12 @@ colPalette <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan",
 image(unique(y$coords[, 1]), unique(y$coords[, 2]), RegionsMap, col = colPalette(ks))
 
 ## Visualization for gridded or ungridded data
-plot(y$coords[, 1], y$coords[, 2], col = colPalette(max(Regions, na.rm = TRUE))[y$region], pch = 15, cex = 1)
+plot(y$coords[, 1], y$coords[, 2], col = colPalette(max(y$region, na.rm = TRUE))[y$region], pch = 15, cex = 1)
 ## Change pch and cex as appropriate!
+
+## Export region map and mean timeseries into NetCDF-4 file
+library(ncdf4)
+HiClimR2nc(y=y, ncfile="HiClimR.nc", timeunit="years", dataunit="mm")
 
 ```
 

@@ -1,9 +1,9 @@
 % File man/minSigCor.Rd
 % Part of the HiClimR R package
-% Copyright(C) 2013-2015 Department of Earth and Planetary Sciences, JHU.
+% Copyright(C) 2013-2019 Department of Earth and Planetary Sciences, JHU.
 % Distributed under GPL 2 or later
 
-\newcommand{\CRANpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
+\newcommand{\CRANpkg}{\href{https://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
 \name{minSigCor}
 \title{Minimum significant correlation for a sample size}
@@ -31,7 +31,7 @@ minSigCor(n=41, alpha=0.05, r=seq(0, 1, by=1e-6))
   range with larger step (e.g., seq(0.1, 0.5, by=1e-3)).}
 }
 \value{
-  A positive value beween \code{0} and \code{1} for the estimated the minimum 
+  A positive value between \code{0} and \code{1} for the estimated the minimum 
   significant correlation.
 }
 \details{
@@ -43,21 +43,22 @@ minSigCor(n=41, alpha=0.05, r=seq(0, 1, by=1e-6))
 }
 \references{
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2015):
-  A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics}, 
-  1-10, \url{http://dx.doi.org/10.1007/s12145-015-0221-7}.
+  A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics},
+  \bold{8}(4), 949-958, \url{https://doi.org/10.1007/s12145-015-0221-7}.
 
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2014):
-  Hierarchical Climate Regionalization, \emph{CRAN},
-  \url{http://cran.r-project.org/package=HiClimR}.
+  Hierarchical Climate Regionalization,
+  \emph{Comprehensive R Archive Network (CRAN},
+  \url{https://cran.r-project.org/package=HiClimR}.
 }
 \author{
   Hamada Badr <badr@jhu.edu>, Ben Zaitchik <zaitchik@jhu.edu>, and 
   Amin Dezfuli <dez@jhu.edu>.
 }
 \seealso{
-  \code{\link{HiClimR}}, \code{\link{validClimR}}, \code{\link{geogMask}}, 
-  \code{\link{coarseR}}, \code{\link{fastCor}}, \code{\link{grid2D}}, and 
-  \code{\link{minSigCor}}.
+  \code{\link{HiClimR}}, \code{\link{HiClimR2nc}}, \code{\link{validClimR}},
+  \code{\link{geogMask}}, \code{\link{coarseR}}, \code{\link{fastCor}},
+  \code{\link{grid2D}} and \code{\link{minSigCor}}.
 }
 \examples{
 require(HiClimR)

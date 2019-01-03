@@ -1,9 +1,9 @@
 % File man/fastCor.Rd
 % Part of the HiClimR R package
-% Copyright(C) 2013-2015 Department of Earth and Planetary Sciences, JHU.
+% Copyright(C) 2013-2019 Department of Earth and Planetary Sciences, JHU.
 % Distributed under GPL 2 or later
 
-\newcommand{\CRANpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
+\newcommand{\CRANpkg}{\href{https://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
 \name{fastCor}
 \title{Fast correlation for large matrices}
@@ -18,7 +18,7 @@
   compute correlation matrix for the columns of any data matrix.
 }
 \usage{
-fastCor(xt, nSplit = 1, upperTri = FALSE, verbose = TRUE)
+fastCor(xt, nSplit = 1, upperTri = FALSE, optBLAS = FALSE, verbose = TRUE)
 }
 \arguments{
   \item{xt}{an (\code{M} rows by \code{N} columns) matrix of 'double' values: 
@@ -50,6 +50,9 @@ fastCor(xt, nSplit = 1, upperTri = FALSE, verbose = TRUE)
   since the correlation/dissimilarity matrix is symmetric. This almost halves memory use, 
   which can be very important for big data.}
 
+  \item{optBLAS}{logical to use optimized BLAS library if installed and \code{optBLAS = TRUE}
+  only on 64-bit machines.}
+
   \item{verbose}{logical to print processing information if \code{verbose = TRUE}.}
 }
 \value{
@@ -74,24 +77,22 @@ fastCor(xt, nSplit = 1, upperTri = FALSE, verbose = TRUE)
 }
 \references{
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2015):
-  A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics}, 
-  1-10, \url{http://dx.doi.org/10.1007/s12145-015-0221-7}.
+  A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics},
+  \bold{8}(4), 949-958, \url{https://doi.org/10.1007/s12145-015-0221-7}.
 
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2014):
-  Hierarchical Climate Regionalization, \emph{CRAN},
-  \url{http://cran.r-project.org/package=HiClimR}.
-  
-  bigcor: \emph{Large correlation matrices in R},
-  \url{https://rmazing.wordpress.com}.
+  Hierarchical Climate Regionalization,
+  \emph{Comprehensive R Archive Network (CRAN},
+  \url{https://cran.r-project.org/package=HiClimR}.
 }
 \author{
   Hamada Badr <badr@jhu.edu>, Ben Zaitchik <zaitchik@jhu.edu>, and 
   Amin Dezfuli <dez@jhu.edu>.
 }
 \seealso{
-  \code{\link{HiClimR}}, \code{\link{validClimR}}, \code{\link{geogMask}}, 
-  \code{\link{coarseR}}, \code{\link{fastCor}}, \code{\link{grid2D}}, and 
-  \code{\link{minSigCor}}.
+  \code{\link{HiClimR}}, \code{\link{HiClimR2nc}}, \code{\link{validClimR}},
+  \code{\link{geogMask}}, \code{\link{coarseR}}, \code{\link{fastCor}},
+  \code{\link{grid2D}} and \code{\link{minSigCor}}.
 }
 \examples{
 require(HiClimR)

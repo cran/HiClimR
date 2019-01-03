@@ -1,9 +1,9 @@
 % File man/HiClimR.Rd
 % Part of the HiClimR R package
-% Copyright(C) 2013-2015 Department of Earth and Planetary Sciences, JHU.
+% Copyright(C) 2013-2019 Department of Earth and Planetary Sciences, JHU.
 % Distributed under GPL 2 or later
 
-\newcommand{\CRANpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
+\newcommand{\CRANpkg}{\href{https://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
 \name{HiClimR}
 \title{Hierarchical Climate Regionalization}
@@ -19,7 +19,7 @@
   efficient code execution for large datasets and options for splitting big data and 
   computing only the upper-triangular half of the correlation/dissimilarity matrix to 
   overcome memory limitations. Hybrid hierarchical clustering reconstructs the upper part 
-  of the tree above a cut to get the best of the available methods. Multi-variate clustering 
+  of the tree above a cut to get the best of the available methods. Multivariate clustering
   (MVC) provides options for filtering all variables before preprocessing, detrending and 
   standardization of each variable, and applying weights for the preprocessed variables. 
   The correlation distance for MVC represents the (weighted) average of distances between 
@@ -30,14 +30,16 @@
   hierarchical clustering in R (\code{\link{hclust}} function in \emph{stats} library): 
   data regridding (\code{\link{grid2D}} function), coarsening spatial resolution 
   (\code{\link{coarseR}} function), geographic masking (\code{\link{geogMask}} function), 
-  data filtering by mean and/or variance thresholds, data preprocessing (detrending, 
-  standardization, and PCA), faster correlation function with preliminary big data support
-  (\code{\link{fastCor}} function), hybrid hierarchical clustering, multi-variate clustering 
+  contiguity-constrained clustering, data filtering by mean and/or variance thresholds,
+  data preprocessing (detrending, standardization, and PCA), faster correlation function
+  (\code{\link{fastCor}} function), hybrid hierarchical clustering, multivariate clustering
   (MVC), cluster validation (\code{\link{validClimR}} and \code{\link{minSigCor}} functions), 
-  and visualization of region maps. Badr et. al (2015) describes the regionalization 
-  algorithms, features, and data processing tools included in the package and presents a 
-  demonstration application in which the package is used to regionalize Africa on the 
-  basis of interannual precipitation variability.
+  and visualization of regionalization results, and exporting region map and mean timeseries
+  into NetCDF-4 file.
+
+  Badr et. al (2015) describes the regionalization algorithms, features, and data processing
+  tools included in the package and presents a demonstration application in which the package
+  is used to regionalize Africa on the basis of interannual precipitation variability.
   
   \emph{\pkg{HiClimR} is applicable to any correlation-based clustering.}
 }
@@ -47,11 +49,17 @@ HiClimR(
   # Input data matrix (N spatial elements x M observations)
   x = list(),
 
+  # Geographic coordinates
+  lon=NULL, lat=NULL,
+
   # Coarsening spatial resolution
-  lon=NULL, lat=NULL, lonStep=1, latStep=1,
+  lonStep=1, latStep=1,
 
   # Geographic masking:
   geogMask=FALSE, gMask=NULL, continent=NULL, region=NULL, country=NULL,
+
+  # Contiguity constraint:
+  contigConst = 0,
 
   # Data thresholds:
   meanThresh = if(class(x) == "list") vector("list", length(x)) else list(NULL), 
@@ -60,7 +68,7 @@ HiClimR(
   # Data preprocessing:
   detrend = if(class(x) == "list") as.list(rep(FALSE, length(x))) else list(FALSE), 
   standardize = if(class(x) == "list") as.list(rep(FALSE, length(x))) else list(FALSE), 
-  weightedVar = if(class(x) == "list") as.list(rep(1, length(x))) else list(1),
+  weightMVC = if(class(x) == "list") as.list(rep(1, length(x))) else list(1),
   nPC=NULL, 
 
   # Clustering options:
@@ -90,7 +98,7 @@ HiClimR(
   observations) are allowed. The zero-variance rows and the columns with
   missing values will be removed. However, it is recommended to take care of 
   both zero-variance rows and missing values before clustering.
-  For Multi-Variate Clustering (MVC), \code{x} can be a list of \code{nvar} matrices 
+  For Multivariate Clustering (MVC), \code{x} can be a list of \code{nvar} matrices
   for the \code{nvar} variables (one matrix for each variable). The matrixes in
   \code{x} list should have the same number of rows (objects: spatial points or stations) 
   Data preprocessing is specified by lists of \code{meanThresh}, \code{varThresh}, 
@@ -149,13 +157,24 @@ HiClimR(
   \code{country} ISO3 character code(s) can be obtained by running 
   \code{geogMask()}.}
 
+  \item{contigConst}{\code{0} or a positive value for contiguity constraint:
+  This is used to apply weighted geographic distances on the initial
+  dissimilarity matrix between the variable(s) in the data matrix \code{x}.
+  It should be a positive real value (\code{contigConst > 0}, recommended
+  between \code{0} and \code{1}) where \code{contigConst = 0} means that clustering
+  is completely based on the data with no constraints for contiguity while
+  \code{contigConst > 0} gives priority to merging contiguous points.
+  Geographic coordinates \code{lon} and \code{lat} are required to compute
+  the geographic distances.
+  \code{regional} linkage method does not support contiguity constraints.}
+
   \item{meanThresh}{\code{NULL} or a threshold for the temporal mean: 
   This is used with \code{varThresh} to mask zero- and near-zero-variance 
   data, Observations with mean less than or equal to meanThresh will 
   be removed. If \code{meanThresh = NULL}, then the \code{varThresh} will 
   be used either to mask zero-variance data by default or by increased 
   variance threshold to mask near-zero-variance data.
-  For Multi-Variate Clustering (MVC), \code{meanThresh} is a list of thresholds 
+  For Multivariate Clustering (MVC), \code{meanThresh} is a list of thresholds
   with the same length of \code{x} where \code{length(x) = nvar}. 
   Each variable is separately preprocessed to allow for all possible options.
   However, it is strongly recommended to standardize all variables since their
@@ -166,7 +185,7 @@ HiClimR(
   Observations with variance less than or equal to varThresh will 
   be removed. If \code{varThresh = 0}, then the zero-variance data 
   will masked (defaut).
-  For Multi-Variate Clustering (MVC), \code{varThresh} is a list of thresholds 
+  For Multivariate Clustering (MVC), \code{varThresh} is a list of thresholds
   with the same length of \code{x} where \code{length(x) = nvar}. 
   Each variable is separately preprocessed to allow for all possible options.
   However, it is strongly recommended to standardize all variables since their
@@ -177,7 +196,7 @@ HiClimR(
   temporal point to another is of interest (e.g., interannual variability). 
   The columns of the data matrix \code{x} should be temporally ordered (constant 
   step size) or have appropriate names (e.g., \code{colnames(x) = years[1:M]}).
-  For Multi-Variate Clustering (MVC), \code{detrend} is a list of thresholds 
+  For Multivariate Clustering (MVC), \code{detrend} is a list of thresholds
   with the same length of \code{x} where \code{length(x) = nvar}. 
   Each variable is separately preprocessed to allow for all possible options.
   However, it is strongly recommended to standardize all variables since their
@@ -189,19 +208,19 @@ HiClimR(
   within the cluster). Otherwise, the mean of raw data will be used (cluster 
   mean = mean of raw variables within the cluster). The variance of the mean 
   is updated at each agglomeration step.
-  For Multi-Variate Clustering (MVC), \code{standardize} is a list of thresholds 
+  For Multivariate Clustering (MVC), \code{standardize} is a list of thresholds
   with the same length of \code{x} where \code{length(x) = nvar}. 
   Each variable is separately preprocessed to allow for all possible options.
   However, it is strongly recommended to standardize all variables since their
   magnitude range could be different.}
 
-  \item{weightedVar}{a list of positive wights (\code{weightedVar > 0}) for 
-  Multi-Variate Clustering (MVC) with the same length of \code{x} where 
+  \item{weightMVC}{a list of positive wights (\code{weightMVC > 0}) for 
+  Multivariate Clustering (MVC) with the same length of \code{x} where
   \code{length(x) = number of variables}. The filtered variables 
   are weighted and combined by column (for each object: spatial points or stations) 
   after preprocessing (detrending and standardization) and before PCA (if requested) 
   and computing the correlation/dissimilarity matrix. The default weight is 
-  \code{weightedVar = 1} for all variables.}
+  \code{weightMVC = 1} for all variables.}
 
   \item{nPC}{\code{NULL} or number of principal components (PCs) to be retained. 
   If \code{nPC = NULL}, then the raw data will be used for clustering. 
@@ -364,7 +383,7 @@ HiClimR(
     if \code{lon} and \code{lat} vectors were defined. It will be similar to the provided 
     \code{lon} and \code{lat} if \code{lonStep = 1} and \code{latStep = 1}.}
 
-  \item{nvars}{number of variables used for multi-variate clustering (MVC).}
+  \item{nvars}{number of variables used for multivariate clustering (MVC).}
 
   \item{ncols}{number of columns for each variable.}
 
@@ -490,12 +509,13 @@ HiClimR(
 }
 \references{
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2015):
-  A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics}, 
-  1-10, \url{http://dx.doi.org/10.1007/s12145-015-0221-7}.
+  A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics},
+  \bold{8}(4), 949-958, \url{https://doi.org/10.1007/s12145-015-0221-7}.
 
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2014):
-  Hierarchical Climate Regionalization, \emph{CRAN},
-  \url{http://cran.r-project.org/package=HiClimR}.
+  Hierarchical Climate Regionalization,
+  \emph{Comprehensive R Archive Network (CRAN},
+  \url{https://cran.r-project.org/package=HiClimR}.
 
   Wilks, D. S. (2011): 
   \emph{Statistical methods in the atmospheric sciences},
@@ -544,7 +564,7 @@ HiClimR(
   contributed to STATLIB by F. Murtagh.
 }
 \seealso{
-  \code{\link{HiClimR}}, \code{\link{validClimR}}, \code{\link{geogMask}}, 
+  \code{\link{HiClimR}}, \code{\link{HiClimR2nc}}, \code{\link{validClimR}}, \code{\link{geogMask}}, 
   \code{\link{coarseR}}, \code{\link{fastCor}}, \code{\link{grid2D}}, 
   \code{\link{minSigCor}}. \code{\link{identify.hclust}}, \code{\link{rect.hclust}}, 
   \code{\link{cutree}}, \code{\link{dendrogram}}, and \code{\link{kmeans}}.
@@ -569,9 +589,9 @@ lat <- c(xGrid$lat)
 ## Single-Variate Hierarchical Climate Regionalization
 y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = FALSE,
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE,
-    standardize = TRUE, nPC = NULL, method = "regional", hybrid = FALSE, kH = NULL, 
+    standardize = TRUE, nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, 
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE, 
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01, 
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01, 
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
 ## For more examples: https://github.com/hsbadr/HiClimR#examples
@@ -587,7 +607,7 @@ y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = FALSE
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE,
     standardize = TRUE, nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL,
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01,
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01,
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
 ## Use data splitting for big data
@@ -595,7 +615,7 @@ y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = FALSE
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE,
     standardize = TRUE, nPC = NULL, method = "ward", hybrid = TRUE, kH = NULL,
     members = NULL, nSplit = 10, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01,
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01,
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
 ## Use hybrid Ward-Regional method
@@ -603,13 +623,13 @@ y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = FALSE
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE,
     standardize = TRUE, nPC = NULL, method = "ward", hybrid = TRUE, kH = NULL,
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01,
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01,
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 ## Check senitivity to kH for the hybrid method above
 
 
 #----------------------------------------------------------------------------------#
-# Typical use of HiClimR for multi-variate clustering:                             #
+# Typical use of HiClimR for multivariate clustering:                              #
 #----------------------------------------------------------------------------------#
 
 ## Load the test data included/loaded in the package (1 degree resolution)
@@ -626,21 +646,21 @@ lat <- c(xGrid$lat)
 y <- HiClimR(x=list(x1, x1), lon = lon, lat = lat, lonStep = 1, latStep = 1, 
     geogMask = FALSE, continent = "Africa", meanThresh = list(10, 10), 
     varThresh = list(0, 0), detrend = list(TRUE, TRUE), standardize = list(TRUE, TRUE), 
-    nPC = NULL, method = "regional", hybrid = FALSE, kH = NULL, 
+    nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, 
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01, 
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01, 
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
 ## Generate a random matrix with the same number of rows
 x2 <- matrix(rnorm(nrow(x1) * 100, mean=0, sd=1), nrow(x1), 100)
 
-## Multi-Variate Hierarchical Climate Regionalization
+## Multivariate Hierarchical Climate Regionalization
 y <- HiClimR(x=list(x1, x2), lon = lon, lat = lat, lonStep = 1, latStep = 1, 
     geogMask = FALSE, continent = "Africa", meanThresh = list(10, NULL), 
     varThresh = list(0, 0), detrend = list(TRUE, FALSE), standardize = list(TRUE, TRUE), 
-    weightedVar = list(1, 1), nPC = NULL, method = "regional", hybrid = FALSE, kH = NULL, 
+    weightMVC = list(1, 1), nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, 
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01, 
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01, 
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 ## You can apply all clustering methods and options
 
@@ -678,28 +698,37 @@ gMask <- geogMask(continent = "Africa", lon = lon, lat = lat, plot = TRUE,
 ## Hierarchical Climate Regionalization Without geographic masking
 y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = FALSE, 
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE, 
-    standardize = TRUE, nPC = NULL, method = "regional", hybrid = FALSE, kH = NULL, 
+    standardize = TRUE, nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, 
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01, 
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01, 
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
-## With geographic masking (specify the mask produced bove to save time)
+## With geographic masking (you may specify the mask produced above to save time)
 y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = TRUE, 
     continent = "Africa", meanThresh = 10, varThresh = 0, detrend = TRUE, 
-    standardize = TRUE, nPC = NULL, method = "regional", hybrid = FALSE, kH = NULL, 
+    standardize = TRUE, nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL, 
     members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
-    validClimR = TRUE, k = NULL, minSize = 1, alpha = 0.01, 
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01, 
+    plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
+
+## With geographic masking and contiguity contraint
+## Change contigConst as appropriate
+y <- HiClimR(x, lon = lon, lat = lat, lonStep = 1, latStep = 1, geogMask = TRUE,
+    continent = "Africa", contigConst = 1, meanThresh = 10, varThresh = 0, detrend = TRUE,
+    standardize = TRUE, nPC = NULL, method = "ward", hybrid = FALSE, kH = NULL,
+    members = NULL, nSplit = 1, upperTri = TRUE, verbose = TRUE,
+    validClimR = TRUE, k = 12, minSize = 1, alpha = 0.01,
     plot = TRUE, colPalette = NULL, hang = -1, labels = FALSE)
 
 ## Find minimum significant correlation at 95% confidence level
 rMin <- minSigCor(n = nrow(x), alpha = 0.05, r = seq(0, 1, by = 1e-06))
 
 ## Validtion of Hierarchical Climate Regionalization
-z <- validClimR(y, k = NULL, minSize = 1, alpha = 0.01, 
+z <- validClimR(y, k = 12, minSize = 1, alpha = 0.01, 
     plot = TRUE, colPalette = NULL)
 
 ## Apply minimum cluster size (minSize = 25)
-z <- validClimR(y, k = NULL, minSize = 25, alpha = 0.01, 
+z <- validClimR(y, k = 12, minSize = 25, alpha = 0.01, 
     plot = TRUE, colPalette = NULL)
 
 ## The optimal number of clusters, including small clusters

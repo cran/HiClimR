@@ -1,4 +1,4 @@
-# $Id: HiClimR.R, v2.1.1 2019/01/02 12:00:00 hsbadr EPS JHU               #
+# $Id: HiClimR.R, v2.1.3 2019/01/10 12:00:00 hsbadr EPS JHU               #
 #-------------------------------------------------------------------------#
 # This is the main function of                                            #
 # HiClimR (Hierarchical Climate Regionalization) R package                #
@@ -19,7 +19,7 @@
 #-------------------------------------------------------------------------#
 #  Clustering Methods:                                                    #
 #                                                                         #
-#  0. REGIONAL linakage or minimum inter-regional correlation             #
+#  0. REGIONAL linkage or minimum inter-regional correlation             #
 #  1. WARD's minimum variance or error sum of squares method              #
 #  2. SINGLE linkage or nearest neighbor method                           #
 #  3. COMPLETE linkage or diameter                                        #
@@ -85,6 +85,8 @@
 #   2.0.0   |  12/22/18  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
 #   2.1.0   |  01/01/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
 #   2.1.1   |  01/02/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
+#   2.1.2   |  01/04/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
+#   2.1.3   |  01/10/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
 #-------------------------------------------------------------------------#
 # COPYRIGHT(C) 2013-2019 Earth and Planetary Sciences (EPS), JHU.         #
 #-------------------------------------------------------------------------#

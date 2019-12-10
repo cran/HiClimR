@@ -1,4 +1,4 @@
-# $Id: HiClimR.R, v2.1.4 2019/01/20 12:00:00 hsbadr EPS JHU               #
+# $Id: HiClimR.R, v2.1.5 2019/12/10 12:00:00 hsbadr EPS JHU               #
 #-------------------------------------------------------------------------#
 # This is the main function of                                            #
 # HiClimR (Hierarchical Climate Regionalization) R package                #
@@ -88,6 +88,7 @@
 #   2.1.2   |  01/04/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
 #   2.1.3   |  01/10/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
 #   2.1.4   |  01/20/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  #
+#   2.1.5   |  12/10/19  |  inherits  |  Hamada S. Badr  |  badr@jhu.edu  #
 #-------------------------------------------------------------------------#
 # COPYRIGHT(C) 2013-2019 Earth and Planetary Sciences (EPS), JHU.         #
 #-------------------------------------------------------------------------#
@@ -105,23 +106,23 @@ HiClimR <- function(x = list(),
                     region = NULL,
                     country = NULL,
                     contigConst = 0,
-                    meanThresh = if (class(x) == "list")
+                    meanThresh = if (inherits(x, "list"))
                       vector("list", length(x))
                     else
                       list(NULL),
-                    varThresh = if (class(x) == "list")
+                    varThresh = if (inherits(x, "list"))
                       as.list(rep(0, length(x)))
                     else
                       list(0),
-                    detrend = if (class(x) == "list")
+                    detrend = if (inherits(x, "list"))
                       as.list(rep(FALSE, length(x)))
                     else
                       list(FALSE),
-                    standardize = if (class(x) == "list")
+                    standardize = if (inherits(x, "list"))
                       as.list(rep(FALSE, length(x)))
                     else
                       list(FALSE),
-                    weightMVC = if (class(x) == "list")
+                    weightMVC = if (inherits(x, "list"))
                       as.list(rep(1, length(x)))
                     else
                       list(1),
@@ -154,7 +155,7 @@ HiClimR <- function(x = list(),
   if (verbose)
     write("Checking Multivariate Clustering (MVC)...", "")
   nvars <- 1
-  if (class(x) == "list") {
+  if (inherits(x, "list")) {
     if (verbose)
       write("---> x is a list", "")
     
@@ -186,7 +187,7 @@ HiClimR <- function(x = list(),
     }
     x <- xx
     rm(xx)
-  } else if (class(x) == "matrix") {
+  } else if (inherits(x, "matrix")) {
     if (verbose)
       write("---> x is a matrix", "")
     mm <- dim(x)[2]
@@ -304,7 +305,7 @@ HiClimR <- function(x = list(),
         write("---> Geographic mask is provided!", "")
     }
     
-    if (length(gMask) > 0 && class(gMask) != "list") {
+    if (length(gMask) > 0 && ! inherits(gMask, "list")) {
       if (min(gMask) >= 1 && max(gMask) <= n) {
         mask <- union(mask, as.integer(gMask))
       }

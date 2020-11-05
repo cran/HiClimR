@@ -1,7 +1,12 @@
 HiClimR
 =======
+[![Stable Version](https://img.shields.io/badge/version-2.1.7-blue)](https://cran.r-project.org/package=HiClimR)
+[![CRAN Downloads](http://cranlogs.r-pkg.org/badges/grand-total/HiClimR)](https://cran.r-project.org/package=HiClimR)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![DOI: 10.1007/s12145-015-0221-7](https://zenodo.org/badge/DOI/10.1007%2Fs12145-015-0221-7.svg)](https://doi.org/10.1007/s12145-015-0221-7)
+[![GitHub Commit](https://img.shields.io/github/last-commit/hsbadr/HiClimR)](https://github.com/hsbadr/HiClimR/commits/master)
 
-[**``HiClimR``**](https://cran.r-project.org/package=HiClimR): **Hi**erarchical **Clim**ate **R**egionalization ![](http://cranlogs.r-pkg.org/badges/grand-total/HiClimR)
+[**``HiClimR``**](https://cran.r-project.org/package=HiClimR): **Hi**erarchical **Clim**ate **R**egionalization
 
 ## Table of Contents
 
@@ -17,6 +22,7 @@ HiClimR
     * [Citation](#citation)
     * [History](#history)
     * [Changes](#changes)
+        * [2020-11-05: version 2.1.7](#2020-11-05-version-217)
         * [2020-02-22: version 2.1.6](#2020-02-22-version-216)
         * [2019-12-10: version 2.1.5](#2019-12-10-version-215)
         * [2019-01-20: version 2.1.4](#2019-01-20-version-214)
@@ -137,7 +143,7 @@ In theory the package should just install, however, you may be asked to select y
 
 #### From GitHub
 
-This is intended for developers and requires a development environment (compilers, libraries, ... etc) to install the latest development release of [**`HiClimR`**](https://cran.r-project.org/package=HiClimR). On **Linux** and **Mac**, you can download the source code and use `R CMD INSTALL` to install it. In a convenient way, you may use [`devtools`](https://github.com/hadley/devtools) as follows:
+This is intended for developers and requires a development environment (compilers, libraries, ... etc) to install the latest development release of [**`HiClimR`**](https://cran.r-project.org/package=HiClimR). On **Linux** and **Mac**, you can download the source code and use `R CMD INSTALL` to install it. In a convenient way, you may use [`devtools`](https://github.com/r-lib/devtools) as follows:
 
 * Install the release version of `devtools` from [**CRAN**](https://cran.r-project.org):
 
@@ -167,7 +173,7 @@ The source code repository can be found on GitHub at [hsbadr/HiClimR](https://gi
 
 ## License
 
-[**`HiClimR`**](https://cran.r-project.org/package=HiClimR) is licensed under `GPL-2 | GPL-3`. The code is modified by [Hamada S. Badr](http://pages.jh.edu/~hbadr1) from `src/library/stats/R/hclust.R` part of [**R** package](https://www.R-project.org) Copyright © 1995-2019 The [**R**](https://www.r-project.org) Core Team.
+[**`HiClimR`**](https://cran.r-project.org/package=HiClimR) is licensed under `GPL-2 | GPL-3`. The code is modified by [Hamada S. Badr](https://hsbadr.github.io) from `src/library/stats/R/hclust.R` part of [**R** package](https://www.R-project.org) Copyright © 1995-2020 The [**R**](https://www.r-project.org) Core Team.
 
 * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -175,7 +181,7 @@ The source code repository can be found on GitHub at [hsbadr/HiClimR](https://gi
 
 A copy of the GNU General Public License is available at https://www.r-project.org/Licenses.
 
-Copyright © 2013-2019 Earth and Planetary Sciences (EPS), Johns Hopkins University (JHU).
+Copyright © 2013-2020 Earth and Planetary Sciences (EPS), Johns Hopkins University (JHU).
 
 [⇪](#hiclimr)
 
@@ -233,10 +239,20 @@ https://cran.r-project.org/package=HiClimR.
 |   **2.1.4**   |   01/20/19   |  Updated      |  Hamada S. Badr  |  badr@jhu.edu  |
 |   **2.1.5**   |   12/10/19   |  **inherits** |  Hamada S. Badr  |  badr@jhu.edu  |
 |   **2.1.6**   |   02/22/20   |  Updated      |  Hamada S. Badr  |  badr@jhu.edu  |
+|   **2.1.7**   |   11/05/20   |  Updated      |  Hamada S. Badr  |  badr@jhu.edu  |
 
 [⇪](#hiclimr)
 
 ## Changes
+
+#### 2020-11-05: version 2.1.7
+
+* Updated package DESCRIPTION and author information
+* Updated copyright year to 2020
+* README: Added Markdown badges
+* README: Added Digital Object Identifier (DOI) badge
+* README: Linked version and download badges to CRAN
+* README: Updated URLs
 
 #### 2020-02-22: version 2.1.6
 

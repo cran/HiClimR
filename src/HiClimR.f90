@@ -119,11 +119,12 @@
 !   2.1.3   |  01/10/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
 !   2.1.4   |  01/20/19  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
 !   2.1.5   |  12/10/19  |  inherits  |  Hamada S. Badr  |  badr@jhu.edu  !
-!   2.1.5   |  02/22/20  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
+!   2.1.6   |  02/22/20  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
+!   2.1.7   |  11/05/20  |  Updated   |  Hamada S. Badr  |  badr@jhu.edu  !
 !                                                                         !
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 !                                                                         !
-! COPYRIGHT(C) 2013-2019 Earth and Planetary Sciences (EPS), JHU.         !
+! COPYRIGHT(C) 2013-2020 Earth and Planetary Sciences (EPS), JHU.         !
 !                                                                         !
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
 !                                                                         !

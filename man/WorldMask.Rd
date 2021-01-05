@@ -1,7 +1,7 @@
 % File man/WorldMask.Rd
 % Part of the HiClimR R package
 % Copyright(C) 2013-2019 Department of Earth and Planetary Sciences, JHU.
-% Distributed under GPL 2 or later
+% Distributed under GPL v3
 
 \name{WorldMask}
 \alias{WorldMask}
@@ -17,7 +17,7 @@
 data(WorldMask)
 }
 \format{
-  \code{WorldMask} is a list with two components: \code{info} and \code{mask}. 
+  \code{WorldMask} is a list with two components: \code{info} and \code{mask}.
   \code{info} is an (\code{284} rows by \code{10} columns) matrix. The rows are for
   areas or countries while the columns are for codes required by \code{\link{geogMask}}.
   \code{mask} is an (\code{3601} rows by \code{1801} columns) matrix with integer
@@ -37,11 +37,11 @@ data(WorldMask)
 \references{
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2015):
   A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics},
-  \bold{8}(4), 949-958, \url{https://doi.org/10.1007/s12145-015-0221-7}.
+  \bold{8}(4), 949-958, \doi{10.1007/s12145-015-0221-7}.
 
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2014):
   Hierarchical Climate Regionalization,
-  \emph{Comprehensive R Archive Network (CRAN},
+  \emph{Comprehensive R Archive Network (CRAN)},
   \url{https://cran.r-project.org/package=HiClimR}.
 
   LSIB Data: \url{https://hiu.state.gov/data/}.

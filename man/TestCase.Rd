@@ -1,7 +1,7 @@
 % File man/TestCase.Rd
 % Part of the HiClimR R package
 % Copyright(C) 2013-2019 Department of Earth and Planetary Sciences, JHU.
-% Distributed under GPL 2 or later
+% Distributed under GPL v3
 
 \name{TestCase}
 \alias{TestCase}
@@ -26,8 +26,8 @@ data(TestCase)
   latitudes coordinates, where \code{80 * 80 = 6400} for this gridded data.
 }
 \details{
-  CRU TS 3.21 data (1901-2012) is monthly gridded precipitation with \code{0.5} 
-  degree resolution. This test data is a subset with 1 degree resolution for 
+  CRU TS 3.21 data (1901-2012) is monthly gridded precipitation with \code{0.5}
+  degree resolution. This test data is a subset with 1 degree resolution for
   African precipitation in January, 1949-1989.
 }
 \source{
@@ -37,17 +37,17 @@ data(TestCase)
 \references{
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2015):
   A Tool for Hierarchical Climate Regionalization, \emph{Earth Science Informatics},
-  \bold{8}(4), 949-958, \url{https://doi.org/10.1007/s12145-015-0221-7}.
+  \bold{8}(4), 949-958, \doi{10.1007/s12145-015-0221-7}.
 
   Hamada S. Badr, Zaitchik, B. F. and Dezfuli, A. K. (2014):
   Hierarchical Climate Regionalization,
-  \emph{Comprehensive R Archive Network (CRAN},
+  \emph{Comprehensive R Archive Network (CRAN)},
   \url{https://cran.r-project.org/package=HiClimR}.
 
   Harris, I., Jones, P. D., Osborn, T. J., and Lister, D. H. (2014):
   Updated high-resolution grids of monthly climatic observations - the CRU TS3.10 Dataset,
   \emph{International journal of climatology}, \bold{34}, 623-642,
-  \url{https://doi.org/10.1002/joc.3711}.
+  \doi{10.1002/joc.3711}.
 }
 \examples{
 require(HiClimR)

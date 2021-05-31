@@ -1,6 +1,6 @@
 Package: HiClimR
 Type: Package
-Version: 2.1.9
+Version: 2.2.0
 Title: Hierarchical Climate Regionalization
 Authors@R: c(
     person(given = "Hamada S.",
@@ -45,10 +45,10 @@ ByteCompile: yes
 NeedsCompilation: yes
 SystemRequirements: NetCDF (>= 4.1)
 Language: en-US
-Packaged: 2021-04-02 13:27:27 UTC; hbadr1
+Packaged: 2021-05-31 11:48:25 UTC; hbadr1
 Author: Hamada S. Badr [aut, cre] (<https://orcid.org/0000-0002-9808-2344>),
   Benjamin F. Zaitchik [aut] (<https://orcid.org/0000-0002-0698-0658>),
   Amin K. Dezfuli [aut] (<https://orcid.org/0000-0003-3274-8542>)
 Maintainer: Hamada S. Badr <badr@jhu.edu>
 Repository: CRAN
-Date/Publication: 2021-04-02 15:10:08 UTC
+Date/Publication: 2021-05-31 12:20:05 UTC

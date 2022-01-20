@@ -1,3 +1,10 @@
+# HiClimR 2.2.1
+
+* Updated package website
+* Updated package `DESCRIPTION` and `README`
+* Updated package dependencies and `WORDLIST`
+* Style and format Fortran code
+
 # HiClimR 2.2.0
 
 * Fixed NOTE: Found (possibly) invalid URLs

@@ -1,6 +1,6 @@
-9a5f7f4643d4c17d60eeb7b10bad834b *DESCRIPTION
+56c0c6c2d211ca6f882e42f5c1aa33b2 *DESCRIPTION
 990c08e03ce0a383e9be9e9d95670402 *NAMESPACE
-61ea8115186536fa0dd5359b885c5d25 *NEWS.md
+dbac54eec90adadc8e28e699b3c71488 *NEWS.md
 26b7ffc9d35f683af3a635b09650ddc6 *R/HiClimR.R
 4ca248a85081b0b2b7b59952715aaeab *R/HiClimR2nc.R
 02399be8ffb1ea998d9a7e9655160de1 *R/coarseR.R
@@ -9,15 +9,15 @@
 aca7d5a563399e7d9dea6c5800d35b2b *R/grid2D.R
 b888a64e84128e724e327931a29e6de1 *R/minSigCor.R
 b102e8ea8003832a8d78913a4a353bcb *R/validClimR.R
-da4c0b4ae211622ffe423dae8d1dc6fa *README.md
-309bbf482e9d0b43716ca926e12e2ef6 *build/partial.rdb
+ed972f6edef4a3e22cea3a39e85d5ed5 *README.md
+2f1b336cceab383ccb0ad386482fac81 *build/partial.rdb
 55f906ba749cbbf06542506362cc4a2c *build/vignette.rds
 db8cfb6e4e7aa3a6ceccd66d7041c2f4 *data/TestCase.rda
 a510de04fc7cbc195fbb4841d9987553 *data/WorldMask.rda
 5e9d1641de317e32f077ab4c8e3be74b *inst/CITATION
-d91335bb21d52f96845461aff5eae511 *inst/WORDLIST
+21ed78575a98961d6d0c74d4e4920fe0 *inst/WORDLIST
 64ec572cef5e5aed3de825e54733531b *inst/doc/BugReports.Rmd
-7a04b93e5149868aafbed99c3d93d4b8 *inst/doc/BugReports.html
+cca69bebd475124cf4920aa4aa2f7c81 *inst/doc/BugReports.html
 d3c9a6726f83f08bb7d6d86d821dd0b8 *man/HiClimR.Rd
 c4fd508bc9c7502e9068a74cf12a7a4d *man/HiClimR2nc.Rd
 3b61fced29c06efbc1c5d638c464012e *man/TestCase.Rd
@@ -28,6 +28,6 @@ ed0e07009e3a14878aebb150675943a8 *man/geogMask.Rd
 e228007af5085dcda7acf54a09195873 *man/grid2D.Rd
 e16c27cb26ff7198885e0eae18c4bce2 *man/minSigCor.Rd
 32fe6f3340078dcab93d84d9ea52ffb6 *man/validClimR.Rd
-406f91dbae8cdf38824a59a04f0337c2 *src/HiClimR.f90
+25991b263f93600c1646695697a127fa *src/HiClimR.f90
 373e7f71be3c6348d819f95b147582c4 *src/HiClimR_init.c
 64ec572cef5e5aed3de825e54733531b *vignettes/BugReports.Rmd

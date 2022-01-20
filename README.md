@@ -119,10 +119,10 @@ In theory the package should just install, however, you may be asked to select y
 
 This is intended for developers and requires a development environment (compilers, libraries, ... etc) to install the latest development release of [**`HiClimR`**](https://cran.r-project.org/package=HiClimR). On **Linux** and **Mac**, you can download the source code and use `R CMD INSTALL` to install it. In a convenient way, you may use [`pak`](https://pak.r-lib.org) as follows:
 
-* Install the development version of `pak`:
+* Install `pak` from [**CRAN**](https://cran.r-project.org):
 
 ```R
-install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
+install.packages("pak")
 ```
 
 * Make sure you have a working development environment:
